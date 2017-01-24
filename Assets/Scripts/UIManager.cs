@@ -7,19 +7,30 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour {
 
     [SerializeField]
+    private Minimap m_Minimap;
+
+    [SerializeField]
     private GameObject m_WinScreen;
 
     [SerializeField]
     private Text m_SizeNum;
 
+    private Snowball Snowball;
+
     void OnEnable()
     {
-        Snowball.GrowSize += SetSnowballSize;
+        Snowball.CollectEvent += SetSnowballSize;
     }
 
-    public void SetSnowballSize(int size)
+    void Start()
     {
-        m_SizeNum.text = size.ToString();
+        Snowball = GameObject.FindObjectOfType<Snowball>();
+        m_Minimap.SetSnowballTarget(Snowball);
+    }
+
+    public void SetSnowballSize()
+    {
+        m_SizeNum.text = GameObject.FindObjectOfType<Snowball>().SnowballSize.ToString();
     }
 
     public void ShowWinScreen()
@@ -44,6 +55,6 @@ public class UIManager : MonoBehaviour {
 
     void OnDisable()
     {
-        Snowball.GrowSize -= SetSnowballSize;
+        Snowball.CollectEvent -= SetSnowballSize;
     }
 }

@@ -10,6 +10,7 @@ public class ResourcePath
 {
     public static string CollectSFX = "collect";
     public static string SnowWhirl = "SnowWhirl";
+    public static string IconCollectable = "MapIcon_Collect";
 }
 
 public class SceneIndex

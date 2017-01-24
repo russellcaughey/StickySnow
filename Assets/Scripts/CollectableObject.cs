@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(MeshCollider), typeof(FixedJoint), typeof(AudioSource))]
 public class CollectableObject : MonoBehaviour {
@@ -9,12 +10,17 @@ public class CollectableObject : MonoBehaviour {
     
     protected FixedJoint m_Joint;
     protected MeshCollider m_MCollider;
+    protected MeshRenderer m_Renderer;
     protected Mesh m_Mesh;
     protected Rigidbody m_Rb;
     protected AudioSource m_AudioSource;
+    protected GameObject m_Icon;
 
     protected bool isInit = false;
     protected bool isTriggered = false;
+
+    public float Size { get { return m_Size; } }
+    public GameObject Icon { set { m_Icon = value; } }
 
     void Start()
     {
@@ -29,6 +35,7 @@ public class CollectableObject : MonoBehaviour {
             m_MCollider = GetComponent<MeshCollider>();
             m_Rb = GetComponent<Rigidbody>();
             m_AudioSource = GetComponent<AudioSource>();
+            m_Renderer = GetComponentInChildren<MeshRenderer>();
             m_MCollider.sharedMesh = GetComponent<MeshFilter>() ? GetComponent<MeshFilter>().mesh : GetComponentInChildren<MeshFilter>().mesh;
 
             m_Rb.isKinematic = true;
@@ -50,11 +57,12 @@ public class CollectableObject : MonoBehaviour {
         m_Joint.connectedBody = col.gameObject.GetComponent<Rigidbody>();
         gameObject.transform.parent = player.CollectedObjects;
         gameObject.layer = LayerMask.NameToLayer(LayerName.Collected);
-        player.Snowball.Grow(1);
         m_Rb.isKinematic = false;
+        m_Renderer.shadowCastingMode = ShadowCastingMode.Off;
         PlaySfx();
-        
-        Destroy(this);
+        Destroy(m_Icon);
+        player.Snowball.CollectedItem();
+        enabled = false;
     }
 
     void PlaySfx()

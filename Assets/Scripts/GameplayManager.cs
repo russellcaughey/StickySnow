@@ -14,7 +14,7 @@ public class GameplayManager : MonoBehaviour {
 
     void OnEnable()
     {
-        Snowball.GrowSize += CollectedItem;
+        Snowball.CollectEvent += CollectedItem;
     }
 
     void Update()
@@ -30,7 +30,7 @@ public class GameplayManager : MonoBehaviour {
         }
     }
 
-    void CollectedItem(int num)
+    void CollectedItem()
     {
         size++;
         if (size == numToWin)
@@ -46,6 +46,6 @@ public class GameplayManager : MonoBehaviour {
 
     void OnDisable()
     {
-        Snowball.GrowSize -= CollectedItem;
+        Snowball.CollectEvent -= CollectedItem;
     }
 }

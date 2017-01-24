@@ -18,7 +18,7 @@ public class CameraFollow : MonoBehaviour {
         gameObject.transform.position = m_FollowObject.transform.position + m_Offset;
         m_NewOffset = m_Offset;
         transform.LookAt(m_FollowObject.transform.position);
-        Snowball.GrowSize += UpdateOffset;
+        Snowball.CollectEvent += UpdateOffset;
     }
 
 	void Update () 
@@ -31,14 +31,14 @@ public class CameraFollow : MonoBehaviour {
         }
 	}
 
-    void UpdateOffset(int num)
+    void UpdateOffset()
     {
-        m_NewOffset.y = num - 1;
-        m_NewOffset.z = -num;
+        m_NewOffset.y = m_FollowObject.GetComponent<Snowball>().SnowballSize - 1;
+        m_NewOffset.z = -m_FollowObject.GetComponent<Snowball>().SnowballSize;
     }
 
     void OnDisable()
     {
-        Snowball.GrowSize -= UpdateOffset;
+        Snowball.CollectEvent -= UpdateOffset;
     }
 }

@@ -15,18 +15,19 @@ public class Snowball : MonoBehaviour {
     protected float m_TorqueSizeFactor = 50;
     protected float m_TorqueBurstFactor = 100;
     protected float m_JumpFactor = 10;
+    protected float m_GrowSize = 1f;
     protected float m_Timer = 5;
     protected int m_SnowballSize;
     protected bool isGrounded = false;
     protected bool isGrowing = false;
 
-    public delegate void SnowballEvent(int num);
-    public static event SnowballEvent GrowSize;
+    public delegate void SnowballEvent();
+    public static event SnowballEvent CollectEvent;
 
     public int SnowballSize { get { return m_SnowballSize; } }
     public Vector3 LastMove { get { return m_LastMoveDir; } }
 
-    protected void Start()
+    protected void OnEnable()
     {
         m_Rb = GetComponent<Rigidbody>();
         m_ParticleSystem = GetComponentInChildren<ParticleSystem>();
@@ -68,16 +69,21 @@ public class Snowball : MonoBehaviour {
             isGrowing = false;
     }
 
-    public void Grow(float increase)
+    public void CollectedItem()
+    {
+        Grow();
+        CollectEvent();
+    }
+
+    void Grow()
     {
         isGrowing = true;
-        m_ScaleTo.x += increase;
-        m_ScaleTo.y += increase;
-        m_ScaleTo.z += increase;
+        m_ScaleTo.x += m_GrowSize;
+        m_ScaleTo.y += m_GrowSize;
+        m_ScaleTo.z += m_GrowSize;
         m_SnowballSize = (int)Mathf.Floor(m_ScaleTo.x);
         m_ParticleSystem.startSize = m_SnowballSize;
         m_ParticleSystem.Play();
-        GrowSize(m_SnowballSize);
     }
 
     void OnCollisionEnter(Collision col)
